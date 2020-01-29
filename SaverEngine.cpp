@@ -46,6 +46,8 @@ BOOL CSaverEngine::Initialize(LPTSTR lpCmdLine)
 		return FALSE;	// Everything is done, no need to run the saver.
 	}
 
+	SetProcessDpiAwareness(PROCESS_SYSTEM_DPI_AWARE);
+
 	BOOL bSuccess = SetupWindows();
 
 	return bSuccess;
@@ -176,7 +178,11 @@ BOOL CSaverEngine::SetupWindows()
 
 BOOL CSaverEngine::PerMonitorInit(HMONITOR hMonitor)
 {
+#ifdef _DEBUG
+	MONITORINFOEX monitorInfo;	// Includes monitor name for debugging purposes
+#else
 	MONITORINFO monitorInfo;
+#endif
 	ZeroMemory(&monitorInfo, sizeof(monitorInfo));
 	monitorInfo.cbSize = sizeof(monitorInfo);
 	if(!GetMonitorInfo(hMonitor, &monitorInfo))

@@ -13,7 +13,7 @@ CFullScreenSaver::CFullScreenSaver()
 	m_bEnable4xMsaa = true;
 	m_bSingleQuad = false;
 
-	m_eSaverType = stSprings; // (SAVER_TYPE)(rand() % NUM_SAVER_TYPES);
+	m_eSaverType = (SAVER_TYPE)(rand() % NUM_SAVER_TYPES);
 
 	switch (m_eSaverType)
 	{
@@ -404,10 +404,14 @@ HRESULT CFullScreenSaver::CreateShaderConstants()
 	}
 	CD3D11_SAMPLER_DESC SamplerDesc;
 	ZeroMemory(&SamplerDesc, sizeof(SamplerDesc));
-	SamplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_MIRROR;
-	SamplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_MIRROR;
-	SamplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_MIRROR;
+	SamplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_BORDER;
+	SamplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_BORDER;
+	SamplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_BORDER;
 	SamplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	SamplerDesc.BorderColor[0] = 0.9f;
+	SamplerDesc.BorderColor[1] = 1.0f;
+	SamplerDesc.BorderColor[2] = 0.2f;
+	SamplerDesc.BorderColor[3] = 1.0f;
 	hr = m_pD3DDevice->CreateSamplerState(&SamplerDesc, &m_pTextureSampler);
 	if (FAILED(hr)) return hr;
 	D3DDEBUGNAME(m_pTextureSampler, "Texture Sampler");
